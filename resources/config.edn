@@ -1,0 +1,2 @@
+{:nrepl {:port 7884 :bind "localhost"}
+ :repl? true}
