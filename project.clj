@@ -12,7 +12,8 @@
                  [ch.qos.logback/logback-classic "1.2.3"]
                  [cprop "0.1.17"]
                  [mount "0.1.16"]
-
+                 [org.clojure/data.csv "1.0.0"]
+                 [metosin/spec-tools "0.10.5"]
                  ;; Date/time
                  [tick "0.4.29-alpha"]
                  ]
