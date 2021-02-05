@@ -16,15 +16,15 @@
 
 (deftest test-specs
   (testing "dob-spec"
-    (is (sp/valid? :grdji.parse/dob   (LocalDate/parse "1999-01-01")))
-    (is (not (sp/valid? :grdji.parse/email "foo.com")))
-    (is (not (sp/valid? :grdji.parse/email "foo.com@bee")))
-    (is (not (sp/valid? :grdji.parse/email "foo.b")))
-    (is (not (sp/valid? :grdji.parse/email "foo@.b")))
-    (is (not (sp/valid? :grdji.parse/email "foo@bar")))     ; this one is probably not valid IRL
-    (is (sp/valid? :grdji.parse/email "foo@bar.com"))
-    (is (sp/valid? :grdji.parse/email "foo@bar.baz.com"))
-    (is (sp/valid? :grdji.parse/email "foo@bar.baz.foo.com"))))
+    (is (sp/valid? :grdji.specs/dob   (LocalDate/parse "1999-01-01")))
+    (is (not (sp/valid? :grdji.specs/email "foo.com")))
+    (is (not (sp/valid? :grdji.specs/email "foo.com@bee")))
+    (is (not (sp/valid? :grdji.specs/email "foo.b")))
+    (is (not (sp/valid? :grdji.specs/email "foo@.b")))
+    (is (not (sp/valid? :grdji.specs/email "foo@bar")))     ; this one is probably not valid IRL
+    (is (sp/valid? :grdji.specs/email "foo@bar.com"))
+    (is (sp/valid? :grdji.specs/email "foo@bar.baz.com"))
+    (is (sp/valid? :grdji.specs/email "foo@bar.baz.foo.com"))))
 
 (deftest mapping
   (testing "validated records"
