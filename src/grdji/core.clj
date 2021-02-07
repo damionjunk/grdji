@@ -1,6 +1,7 @@
 (ns grdji.core
   (:require [grdji.sys.core :as c]                          ;; system bootstrapping located in sys.core
             [clojure.tools.logging :as log]
+            [grdji.http :as http]
             [grdji.file :as gfile]
             [grdji.sys.config :refer [config]])
   (:import (java.io StringWriter)))
@@ -10,19 +11,26 @@
 
   Starts a REPL, does file IO, or starts a REST webserver."
   []
-  (cond
-    (-> config :options :repl)
-    (do (log/info "Starting in REPL only mode."))
+  (when (-> config :repl?)
+    (log/info "Starting REPL using default configuration."))
 
-    (-> config :options :file)
+  (when (-> config :output?)
     (do (log/info "File input mode, reading from:" (-> config :options :file))
-        (let [sort-option (-> config :options :option (#(str "option-" %)) keyword)]
+        (let [sort-option (-> config :options :output (#(str "option-" %)) keyword)]
           (log/info "Sort mode: " sort-option)
           (with-open [st (StringWriter.)]
             (println "")
             (gfile/->csv! (gfile/file->sorted-recs (-> config :options :file) sort-option) st)
             (println (str st))))
-        (c/stop-app))))
+        ;; Shut everything down if we're not running a webserver.
+        (when-not (-> config :http?)
+          (c/stop-app))))
+
+  (when (-> config :http?)
+    (do (log/info "Starting HTTP server")
+        (when (-> config :file?)
+          (http/pre-load-records (-> config :options :file)))
+        (http/start))))
 
 (defn -main
   [& args]

@@ -41,3 +41,12 @@
    Return is a valid and coerced map containing the same keys."
   [rec]
   (st/decode the-record-spec rec st/string-transformer))
+
+(defn valid-record?
+  "`nil` if nil or ::sp/invalid; `true` otherwise.
+
+  Use with `keep`."
+  [rec]
+  (if (or (nil? rec) (= ::sp/invalid rec))
+    false
+    true))

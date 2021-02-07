@@ -1,1 +1,2 @@
-{:nrepl {:port 7884 :bind "localhost"}}
+{:nrepl             {:port 7884 :bind "localhost"}
+ :service-host-args {:port 3000}}

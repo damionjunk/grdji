@@ -18,13 +18,13 @@
 (def cli-options
   [["-c" "--config EDNFILE"  "EDN Config Overrides"]
    ["-r" "--repl"            "Start a repl and do nothing."]
-   ["-f" "--file INPUT"      "Input Records File"
+   ["-w" "--web"             "Start a REST web server."]
+   ["-f" "--file INPUT"      "Input Records File for output or API pre-loading"
     :parse-fn io/file
     :validate [#(.exists %) "Input file not found."]]
-   ["-o" "--option OPT" "Sort option 1: email(desc)last(asc) 2: dob(asc) 3: last(desc)"
+   ["-o" "--output OPT" "Sort option 1: email(desc)last(asc) 2: dob(asc) 3: last(desc)"
     :parse-fn #(Long. %)
-    :validate [#(and (> % 0) (<= % 3)) "Sort option must be 1, 2, or 3."]
-    :default 1]
+    :validate [#(and (> % 0) (<= % 3)) "Sort option must be 1, 2, or 3."]]
    ["-h" "--help"]])
 
 (defn usage [options-summary]
@@ -40,21 +40,36 @@
   (str "The following errors occurred while parsing your command:\n\n"
        (s/join \n errors)))
 
+(defn post-validate-opts
+  "Perform validation for option dependencies."
+  [opts]
+  (when (and (:output? opts) (not (:file? opts)))
+    ["You must specify an input file to perform output operations."]
+    ))
+
 (defn validate-args
   [args]
-  (let [{:keys [options arguments errors summary] :as opts} (parse-opts args cli-options)]
+  (let [{:keys [options arguments errors summary] :as opts} (parse-opts args cli-options)
+        accum-opts (reduce (fn [m [k _]]
+                             (cond
+                               (= k :web) (assoc m :http? true)
+                               (= k :repl) (assoc m :repl? true)
+                               (= k :file) (assoc m :file? true)
+                               (= k :output) (assoc m :output? true)
+                               :else m)
+                             ) {}  options)
+        opts (merge opts accum-opts)
+        errors (into errors (post-validate-opts opts))]
     (cond
       (:help options) ; help => exit OK with usage summary
       {:exit-message (usage summary) :ok? true}
 
-      ;; Ignore commands for migration and just start the repl
-      (:repl options) (merge opts {:repl? true})
-
       errors ; errors => exit with description of errors
       {:exit-message (error-msg errors)}
 
-      ;; The only other valid runmode besides REPL for now.
-      (:file options) opts
+      ;; If we have a valid run-mode, kick back the options
+      (or (:http? opts) (:repl? opts) (:output? opts))
+      opts
 
       :else ; failed custom validation => exit with usage summary
       {:exit-message (usage summary)})))
@@ -74,6 +89,5 @@
 (defn start-app [args handler]
   (doseq [component (get-components args)]
     (log/info component "started"))
-
   (handler)
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))

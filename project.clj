@@ -16,6 +16,13 @@
                  [metosin/spec-tools "0.10.5"]
                  ;; Date/time
                  [tick "0.4.29-alpha"]
+                 ;; Web
+                 [ring/ring-jetty-adapter "1.8.0"]
+                 [metosin/ring-http-response "0.9.1"]
+                 [metosin/reitit "0.3.10"]
+                 [ring/ring-core "1.8.0"]
+                 [ring/ring-defaults "0.3.2"]
+                 [cheshire "5.10.0"]
                  ]
 
   :exclusions
@@ -31,7 +38,9 @@
 
   :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.24.1"]
                              [jonase/eastwood "0.3.7"]
-                             ]}}
+                             ]
+                   :resource-paths ["test/resources"]}
+             }
 
   :min-lein-version "2.5.0"
   :resource-paths ["resources"]

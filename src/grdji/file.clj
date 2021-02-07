@@ -40,7 +40,7 @@
     (sort-by
       (-> sorts sort-option-key :keyfn)
       (-> sorts sort-option-key :comparator)
-      (doall (map line->rec (line-seq file-reader))))))
+      (doall (filter sp/valid-record? (map line->rec (line-seq file-reader)))))))
 
 ;; Defines both the output position and transformation done on the record.
 (def transforms [[:lastname identity]
