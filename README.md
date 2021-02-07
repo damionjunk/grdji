@@ -44,11 +44,11 @@ curl -v -d "line=lna | fna | bzee@boo.com  | orange  | 2019-03-01" -X POST local
 ## Inputs
 
 - Pipe-delimited, comma-delimited, or space-delimited file.
- - `LastName, FirstName, Email, FavoriteColor, DateOfBirth`
+  - `LastName, FirstName, Email, FavoriteColor, DateOfBirth`
  - DateOfBirth
-  - Input Format is `yyyy-MM-dd`
-   - https://www.iso.org/iso-8601-date-and-time-format.html
-  - https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+   - Input Format is `yyyy-MM-dd`
+    - https://www.iso.org/iso-8601-date-and-time-format.html
+   - https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   
 ## Outputs
 
@@ -56,7 +56,4 @@ curl -v -d "line=lna | fna | bzee@boo.com  | orange  | 2019-03-01" -X POST local
 2. Sorted by birth date (ascending)
 3. Sorted by last name, descending
 
-Dates are displayed as `MM/dd/yyyy`
-
-## Usage
-
+Dates are displayed as `M/d/yyyy`
